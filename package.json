@@ -1,0 +1,15 @@
+{
+  "name": "devtinder-namastedev",
+  "version": "1.0.0",
+  "description": "JavaScript and NodeJs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev" : "nodemon src/app.js"
+  },
+  "author": "Shweta Veer",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
