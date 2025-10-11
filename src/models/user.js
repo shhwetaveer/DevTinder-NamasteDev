@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
+const brypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-    fisrtName: {
+    firstName: {
         type: String,
         unique: true,
         required: true,
@@ -56,7 +58,7 @@ const userSchema = new mongoose.Schema({
     },
     photoURL: {
         type: String,
-        default: "Some random photo",
+        default: "https://share.google/images/gtKEUMAdBZ8DBzFmW",
             validate(value){
             if(!validator.isURL(value)){
                 throw new Error("Photo URL is invalid");
@@ -71,6 +73,26 @@ const userSchema = new mongoose.Schema({
         timestamps: true
     }
 );
+
+userSchema.methods.getJWT = async function(){
+    //this keyword does not works with arrow function
+    const user = this;
+    const token = jwt.sign({ id: user._id }, "Shweta@12345",{
+                expiresIn:"7d"
+            });
+            return token;
+}
+
+userSchema.methods.validatePassword = async function(passwordInputByUser){
+    const user = this;
+    const passwordHash = user.password;
+
+    const isPasswordValid = await brypt.compare(
+        passwordInputByUser,
+        passwordHash
+    );
+    return isPasswordValid;
+}
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
