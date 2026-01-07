@@ -6,11 +6,9 @@ const brypt = require('bcrypt');
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        unique: true,
         required: true,
         minLength: 3,
-        maxLength: 25
-
+        maxLength: 25 
     },
     lastName: {
         type: String,
@@ -21,7 +19,7 @@ const userSchema = new mongoose.Schema({
     }, 
     emailId: {
         type: String,
-        unique: true,
+        unique: true, //automatically creates index
         required: true,
         lowercase: true,
         trim: true,

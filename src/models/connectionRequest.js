@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+
+
 const connectionRequestSchema = new mongoose.Schema(
     {
             formUserId: 
@@ -11,15 +13,28 @@ const connectionRequestSchema = new mongoose.Schema(
             },
             status:
             { type: String,
+                required:true,
                 enum:{ 
                     values: ['interested','ignored', 'accepted', 'rejected'],
-                    message: '{VALUE} is incorrect status type'}
+                    message: '{VALUE} is incorrect status type',},
             },
         },
 
     {
         timestamps: true
     });
+  
+connectionRequestSchema.index({formUserId:1,
+    toUserId:1
+});
 
-const connectRequestModel = mongoose.model('ConnectionRequest', connectionRequestSchema);
-module.exports = connectRequestModel;
+connectionRequestSchema.pre("save", function(){
+    const connectionRequest = this;
+    // check if from is same as to 
+    if(connectionRequest.formUserId.equals(connectionRequest.toUserId)){
+        throw new Error("You cannot send connection request to yourself");
+    } 
+});
+
+const connectionRequestModel = mongoose.model('ConnectionRequest', connectionRequestSchema);
+module.exports = connectionRequestModel;
