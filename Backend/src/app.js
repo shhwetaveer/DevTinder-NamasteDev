@@ -1,9 +1,19 @@
-const express = require('express');
-const connectDB = require('./config/database');
+const express = require("express");
+require("dotenv").config();
+
+const connectDB = require("./config/database");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+
 const app = express();
+// middlewares
 app.use(express.json());
-const cookieParser = require('cookie-parser');
 app.use(cookieParser());
+app.use(cors({
+    origin: "http://localhost:5173", //Whitelisting 
+    credentials: true
+}));
+
 
 
 const authRouter = require('./routes/auth');
@@ -11,10 +21,10 @@ const profileRouter = require('./routes/profile');
 const requestRouter = require('./routes/request');
 const userRouter = require('./routes/user');
 
-app.use("/auth", authRouter);
-app.use("/profile", profileRouter);
-app.use("/request", requestRouter);
-app.use("/user", userRouter);
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
+app.use("/", userRouter);
 
 connectDB()
     .then(() => {
@@ -24,5 +34,5 @@ connectDB()
         });
     })
     .catch((err) => {
-        console.error("Error connecting to the database");
+        console.error("Error connecting to the database", err);
     });

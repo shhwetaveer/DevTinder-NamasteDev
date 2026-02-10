@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
-const brypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
     },
     lastName: {
         type: String,
-        unique: true,
         required: true,
         minLength: 3,
         maxLength: 25
@@ -32,7 +31,6 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        unique: true,
         minLength: 8,
                     validate(value){
             if(!validator.isStrongPassword(value)){
@@ -85,7 +83,7 @@ userSchema.methods.validatePassword = async function(passwordInputByUser){
     const user = this;
     const passwordHash = user.password;
 
-    const isPasswordValid = await brypt.compare(
+    const isPasswordValid = await bcrypt.compare(
         passwordInputByUser,
         passwordHash
     );
