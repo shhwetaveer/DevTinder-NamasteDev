@@ -8,22 +8,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minLength: 3,
-        maxLength: 25 
+        maxLength: 25
     },
     lastName: {
         type: String,
         required: true,
         minLength: 3,
         maxLength: 25
-    }, 
+    },
     emailId: {
         type: String,
         unique: true, //automatically creates index
         required: true,
         lowercase: true,
         trim: true,
-        validate(value){
-            if(!validator.isEmail(value)){
+        validate(value) {
+            if (!validator.isEmail(value)) {
                 throw new Error("Email is invalid");
             }
         }
@@ -32,8 +32,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minLength: 8,
-                    validate(value){
-            if(!validator.isStrongPassword(value)){
+        validate(value) {
+            if (!validator.isStrongPassword(value)) {
                 throw new Error("Your password is not strong enough");
             }
         }
@@ -54,13 +54,13 @@ const userSchema = new mongoose.Schema({
     },
     photoURL: {
         type: String,
-        default: "https://share.google/images/gtKEUMAdBZ8DBzFmW",
-            validate(value){
-            if(!validator.isURL(value)){
-                throw new Error("Photo URL is invalid");
-            }
+        default: "",
+        validate(value) {
+            if (!value) return true;
+            return validator.isURL(value);
         }
-    },
+    }
+    ,
     skills: {
         type: [String]
     }
@@ -70,16 +70,16 @@ const userSchema = new mongoose.Schema({
     }
 );
 
-userSchema.methods.getJWT = async function(){
+userSchema.methods.getJWT = async function () {
     //this keyword does not works with arrow function
     const user = this;
-    const token = jwt.sign({ id: user._id }, "Shweta@12345",{
-                expiresIn:"7d"
-            });
-            return token;
+    const token = jwt.sign({ id: user._id }, "Shweta@12345", {
+        expiresIn: "7d"
+    });
+    return token;
 }
 
-userSchema.methods.validatePassword = async function(passwordInputByUser){
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
     const user = this;
     const passwordHash = user.password;
 
