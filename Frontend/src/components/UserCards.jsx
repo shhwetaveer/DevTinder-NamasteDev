@@ -6,7 +6,7 @@ const UserCards = ({ user }) => {
   return (
     <div className="card w-96 bg-base-100 shadow-xl rounded-2xl overflow-hidden">
 
-      <figure className="h-64 bg-gray-200 flex items-center justify-center">
+      <figure className="h-110 bg-gray-200 flex items-center justify-center">
         <img
           src={photoURL ? photoURL : defaultImage}
           alt="profile"
